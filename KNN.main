@@ -1,0 +1,39 @@
+# KNN code
+# Functions for Euclidean_Distance, Manhattan_Distance, and Sort_and_Gen_Labels are defined in 'SupportFunctions' file
+
+def myKNN (X, y, X_, k, distance): 
+    '''
+    Description:
+        This function performs a KNN analyis on a data matrix.
+        
+    Args: This function has five parameters. 
+    
+        param X (DataFrame/Series) : The training data of the data matrix
+        param y (Series) :  The class labels of the training set.
+        param X_ (DataFrame/Series): The testing data of the data matrix
+        param k (int): The k value.
+        param distance (str): Must be 'euclidean' or 'manhattan'.
+    
+    Returns:
+        This function returns a list of predicted class labels for the testing data.
+    
+    '''
+    predictions = []
+    
+    for i in range(len(X_)):
+        
+        distance_values = []
+    
+        for j in range(len(X)):
+ 
+            if distance == 'euclidean':  
+                
+                distance_values.append( [ euclidean_distance(X_, X, i, j) , y.iloc[j]] )
+                
+            elif distance =='manhattan':
+                
+                distance_values.append( [ manhattan_distance(X_, X, i, j) , y.iloc[j]] )
+                
+        sort_and_get_labels(distance_values, predictions, k)
+    
+    return predictions
