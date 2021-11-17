@@ -1,0 +1,109 @@
+#Support Functions
+
+#Euclidean distance function
+def euclidean_distance(X_, X, i, j):
+    '''
+    Description: 
+        This function calculates the euclidean distance between two vectors.
+        
+    Args: This function takes four parameters
+        param X_ (DataFrame/Series): The testing set. 
+        param X (DataFrame/Series) : The training set. 
+        i (int) : Index value of test point.
+        j (int) : Index value of training point. 
+        
+    Returns:
+        Float point value.
+'''
+    arr1 = np.array(X_.iloc[i])
+    arr2 = np.array(X.iloc[j])
+    distance = np.linalg.norm(arr1 - arr2)
+    return distance
+    
+#Manhattan distance function
+def manhattan_distance(X_, X, i, j):
+    '''
+    Description: 
+        This function calculates the Manhattan distance between two vectors.
+        
+    Args: This function takes four parameters
+        param X_ (DataFrame/Series): The testing set. 
+        param X (DataFrame/Series) : The training set. 
+        i (int) : Index value of test point.
+        j (int) : Index value of training point. 
+        
+    Returns:
+        Float point value. 
+    '''
+    arr1 = np.array(X_.iloc[i])
+    arr2 = np.array(X.iloc[j])
+    distance = sum(abs(arr1 -arr2))
+    return distance
+
+#normalize function (if needed)
+def normalize(X_, X):
+    for i in range(len(X_)):
+        X_.iloc[i] = (X_.iloc[i]-X_.mean())/X_.std()
+    return X_
+        
+    for i in range(len(X)):
+        X.iloc[i] = (X.iloc[i]-X.mean())/X.std() 
+    return X
+
+#sort distance values, select subset values based on k, gather labels 
+def sort_and_get_labels(dist, predictions, k):
+    '''
+    Description: 
+        This function returns the predicted k value for a testing point.
+        
+    Args: This function takes three parameters.
+        param dist (list): A list of distance values.  
+        param predictions (list): The list k is appened to.
+        param k (int) : k value. 
+        
+    Returns:
+        List of predicted k values.
+        
+    Notes:
+        Dist is a list of lists, with each sub-list containing 
+        the distance and correspoding label value. 
+    '''
+    #sorting list from smallest to largest
+    dist.sort(key = lambda x: x[0])
+        
+    #take the k shortest distance
+    k_distance = dist[:k]
+        
+    #print("shortest distances ",k_distance)
+    #converting list of lists into a single list
+    k_values = []  
+    for sublist in k_distance:
+        for val in sublist:
+            k_values.append(val)
+        
+    #selecting the prediction values from list
+    labels = k_values[1::2]
+       
+    #create the list of predictions
+    prediction = max(labels, key=labels.count)
+    predictions.append(prediction)
+    y_pred_E = prediction
+
+
+# Calculates accuracy of the predicted values
+
+def print_accuracy(y_pred, y_test):
+    '''
+    Description: 
+        This function calculates the accuracy of the predicted values with
+        the actual class values. 
+        
+    Args: This function takes two parameters.
+        param y_pred (list): A list of predicted k values.   
+        param y_test (list/Series): A list of actual class labels.
+        
+    Returns:
+        calucaltion for accuracy and a print out of the accuracy. 
+    '''
+    accuracy = (sum(x == y for x, y in zip(y_pred, y_test)) / len(y_pred))*100
+    print("accuracy" ,round(accuracy, 3),"%")
