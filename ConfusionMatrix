@@ -1,0 +1,49 @@
+# confusion matrix, accuracy, precision, recall, etc. 
+# accuracy function defined in 'SupportFunctions' file
+
+def confusion_matrix(actual, predictions):
+    '''
+    Description:
+        This function calculates the accuracy, recall, precision, and a confusion matrix. 
+    
+    Args:
+        The function takes two parameters.
+        param actual (Series) : the ground truth class labels. What the predictions will be compared to. 
+        param predictions (list) : a list of predicted class labels. 
+    
+    Returns:
+        After comparing the predicted results with the actual labels the function returns the a print out of the accuracy, 
+        the recall, the precision, and the confusion matrix.
+    
+    Notes:
+        When this function is employed in myNestedCrossVal the print accuracy line should be commented out. 
+    
+    '''
+    
+    actual = actual.tolist()
+
+    #setting up the confusion matrix
+    g1 = len(np.unique(actual))
+    C = np.zeros((g1,g1), dtype=np.int)
+    for i in range(0, len(predictions)):
+        C[actual[i], predictions[i]] +=1 #1
+    
+    #accuracy
+    accuracy = round(((np.diag(C).sum() / len(predictions)) * 100), 2)
+    
+    #recall 
+    recall = []
+    for i in range(0,g1):
+        recall.append((C[i,i] / C[i,:].sum())*100 )
+        
+    #precision
+    precision = []
+    for i in range(0,g1):
+        precision.append((C[i,i] / C[:,i].sum())*100 )
+
+    #printing
+    print('Confusion Matrix \n',C, "\n")
+    print('Accuracy :',accuracy, '%')
+    print('Classes:      ',np.unique(actual) )    
+    print('Precision: ',precision)
+    print('Recall:    ',recall)
